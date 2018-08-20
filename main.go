@@ -6,27 +6,24 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/sandyleo26/lalamove/order"
 )
 
 func main() {
-
-	r := mux.NewRouter()
-	r.HandleFunc("/order", CreateOrder).Methods("POST")
-	r.HandleFunc("/order/{id}", TakeOrder).Methods("PUT")
-	r.HandleFunc("/orders", GetOrder).Methods("GET")
-	http.Handle("/", r)
+	uc := order.RealUseCase{}
+	http.Handle("/", Router(&uc))
 	fmt.Println("Listening :8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func CreateOrder(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Create Order")
-}
-
-func TakeOrder(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Take order")
-}
-
-func GetOrder(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Get Order")
+//Router returns router
+func Router(uc order.UseCase) *mux.Router {
+	r := mux.NewRouter()
+	createOrderHandler := order.NewCreateOrderHandler(uc)
+	takeOrderHandler := order.NewTakeOrderHandler(uc)
+	getOrderHandler := order.NewGetOrderHandler(uc)
+	r.HandleFunc("/order", createOrderHandler).Methods("POST")
+	r.HandleFunc("/order/{id}", takeOrderHandler).Methods("PUT")
+	r.HandleFunc("/orders", getOrderHandler).Methods("GET")
+	return r
 }
