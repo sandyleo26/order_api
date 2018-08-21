@@ -32,7 +32,7 @@ func TestRouterSuccess(t *testing.T) {
 		Status: "taken",
 	})
 	req, _ = http.NewRequest("PUT", "/order/42", bytes.NewBuffer(b))
-	mockUC.On("TakeOrder", 42, &order.TakeRequest{Status: "taken"}).Return(&order.TakeResponse{}, http.StatusOK, nil)
+	mockUC.On("TakeOrder", uint(42), &order.TakeRequest{Status: "taken"}).Return(&order.TakeResponse{}, http.StatusOK, nil)
 	Router(&mockUC).ServeHTTP(rr, req)
 	mockUC.AssertExpectations(t)
 	assert.Equal(t, http.StatusOK, rr.Code)
@@ -102,7 +102,7 @@ func TestRouterErrorCondition(t *testing.T) {
 	rr = httptest.NewRecorder()
 	b, _ = json.Marshal(&order.TakeRequest{})
 	req, _ = http.NewRequest("PUT", "/order/42", bytes.NewBuffer(b))
-	mockUC.On("TakeOrder", 42, &order.TakeRequest{}).Return(&order.TakeResponse{}, http.StatusConflict, fmt.Errorf("TakeOrder error"))
+	mockUC.On("TakeOrder", uint(42), &order.TakeRequest{}).Return(&order.TakeResponse{}, http.StatusConflict, fmt.Errorf("TakeOrder error"))
 	Router(&mockUC).ServeHTTP(rr, req)
 	mockErrorResponse = order.ErrorResponse{}
 	json.NewDecoder(rr.Body).Decode(&mockErrorResponse)
