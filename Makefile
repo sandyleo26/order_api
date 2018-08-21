@@ -7,7 +7,8 @@ default: start
 .PHONY: setup
 setup:
 	go get -u github.com/golang/dep/cmd/dep
-	go get -u github.com/pressly/goose/cmd/goose
+	go get bitbucket.org/liamstask/goose/cmd/goose
+	$(MAKE) dep
 
 .PHONY:
 dep:
@@ -21,6 +22,10 @@ build:
 .PHONY: build-linux
 build-linux:
 	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o build/${OUT}-linux
+
+.PHONY: start-linux
+start-linux:
+	build/${OUT}-linux
 
 .PHONY: clean
 clean:
@@ -37,7 +42,7 @@ container: clean build-linux
 
 .PHONY: container-start
 container-start:
-	docker run --env-file ./env.list -d -p 8080:8080 --name ${OUT}.local ${OUT}:${VERSION}
+	docker run --env-file ./env.list --link ${DB}.db -d -p 8080:8080 --name ${OUT}.local ${OUT}:${VERSION}
 
 .PHONY: container-stop
 container-stop:
@@ -51,3 +56,7 @@ db-container:
 .PHONY: db-container-start
 db-container-start:
 	docker run -d -p 5432:5432 --name ${DB}.db ${DB}:${VERSION}
+
+.PHONY: db-migration
+db-migration:
+	goose up

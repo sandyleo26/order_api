@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -20,19 +21,13 @@ func OpenDB() *gorm.DB {
 		}
 	}
 
-	// dbHost := os.Getenv("DB_HOST")
-	// dbPort := os.Getenv("DB_PORT")
-	// dbName := os.Getenv("DB_NAME")
-	// dbUser := os.Getenv("DB_USER")
-	// dbPass := os.Getenv("DB_PASS")
-	// dbSSL := os.Getenv("DB_SSL")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbSSL := os.Getenv("DB_SSL")
 
-	dbHost := "localhost"
-	dbPort := "5432"
-	dbName := "sha"
-	dbUser := "postgres"
-	dbPass := "pass"
-	dbSSL := "disable"
 	connectionStr := fmt.Sprintf("host=%s port=%s dbname=%s user=%s password=%s sslmode=%s", dbHost, dbPort, dbName, dbUser, dbPass, dbSSL)
 	driver := "postgres"
 
