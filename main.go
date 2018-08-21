@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	uc := order.RealUseCase{}
-	http.Handle("/", Router(&uc))
+	uc := order.NewRealUseCase()
+	http.Handle("/", Router(uc))
 	fmt.Println("Listening :8080...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
