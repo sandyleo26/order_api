@@ -63,9 +63,9 @@ func (uc *RealUseCase) TakeOrder(id uint, r *TakeRequest) (*TakeResponse, int, e
 		return nil, http.StatusBadRequest, fmt.Errorf("bad request")
 	}
 
-	_, err := uc.DBAdaptor.Update(id, StatusSUCCESS)
+	_, status, err := uc.DBAdaptor.Update(id, StatusSUCCESS)
 	if err != nil {
-
+		return nil, status, err
 	}
 	return &TakeResponse{
 		Status: "SUCCESS",

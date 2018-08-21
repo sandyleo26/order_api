@@ -79,7 +79,7 @@ type Order struct {
 	EndLat    string
 	EndLong   string
 	Distance  int
-	Status
+	Status    Status
 }
 
 func (*Order) TableName() string {
