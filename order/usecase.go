@@ -8,7 +8,7 @@ import (
 
 type UseCase interface {
 	CreateOrder(r *CreateRequest) (*CreateResponse, int, error)
-	TakeOrder(id int, r *TakeRequest) (*TakeResponse, int, error)
+	TakeOrder(id uint, r *TakeRequest) (*TakeResponse, int, error)
 	GetOrder(options *GetOptions) ([]*GetResponse, int, error)
 }
 
@@ -57,12 +57,40 @@ func (uc *RealUseCase) CreateOrder(r *CreateRequest) (*CreateResponse, int, erro
 	}, http.StatusOK, nil
 }
 
-func (*RealUseCase) TakeOrder(id int, r *TakeRequest) (*TakeResponse, int, error) {
+func (uc *RealUseCase) TakeOrder(id uint, r *TakeRequest) (*TakeResponse, int, error) {
+	if err := r.validate(); err != nil {
+		log.Printf("TakeRequest validate failed with error=%s", err.Error())
+		return nil, http.StatusBadRequest, fmt.Errorf("bad request")
+	}
+
+	_, err := uc.OutputAdaptor.Update(id, StatusSUCCESS)
+	if err != nil {
+
+	}
 	return &TakeResponse{
 		Status: "SUCCESS",
 	}, http.StatusOK, nil
 }
 
-func (*RealUseCase) GetOrder(options *GetOptions) ([]*GetResponse, int, error) {
-	return []*GetResponse{}, http.StatusOK, nil
+func (uc *RealUseCase) GetOrder(options *GetOptions) ([]*GetResponse, int, error) {
+	if err := options.validate(); err != nil {
+		return nil, http.StatusBadRequest, err
+	}
+
+	orders, err := uc.OutputAdaptor.Get(options)
+	if err != nil {
+		return nil, http.StatusInternalServerError, err
+	}
+
+	responses := make([]*GetResponse, 0)
+	for _, order := range orders {
+		resp := &GetResponse{
+			ID:       order.ID,
+			Distance: order.Distance,
+			Status:   order.Status,
+		}
+		responses = append(responses, resp)
+	}
+
+	return responses, http.StatusOK, nil
 }

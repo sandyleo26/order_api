@@ -14,6 +14,17 @@ type CreateRequest struct {
 	Destination Location
 }
 
+func (r CreateRequest) validate() error {
+	if len(r.Origin) < 2 {
+		return fmt.Errorf("Invalid origin")
+	}
+
+	if len(r.Destination) < 2 {
+		return fmt.Errorf("Invalid destination")
+	}
+	return nil
+}
+
 type Status string
 
 const (
@@ -31,6 +42,13 @@ type TakeRequest struct {
 	Status
 }
 
+func (r TakeRequest) validate() error {
+	if r.Status != "taken" {
+		return fmt.Errorf("Invalid TakeRequest")
+	}
+	return nil
+}
+
 type TakeResponse struct {
 	Status
 }
@@ -38,6 +56,13 @@ type TakeResponse struct {
 type GetOptions struct {
 	Page  int
 	Limit int
+}
+
+func (opt GetOptions) validate() error {
+	if opt.Limit < 0 || opt.Page < 0 {
+		return fmt.Errorf("invalid GetOptions")
+	}
+	return nil
 }
 
 type GetResponse CreateResponse
@@ -59,15 +84,4 @@ type Order struct {
 
 func (*Order) TableName() string {
 	return "order_record"
-}
-
-func (r CreateRequest) validate() error {
-	if len(r.Origin) < 2 {
-		return fmt.Errorf("Invalid origin")
-	}
-
-	if len(r.Destination) < 2 {
-		return fmt.Errorf("Invalid destination")
-	}
-	return nil
 }

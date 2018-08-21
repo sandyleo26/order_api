@@ -46,7 +46,7 @@ func NewTakeOrderHandler(uc UseCase) func(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		resp, status, err := uc.TakeOrder(int(id), &request)
+		resp, status, err := uc.TakeOrder(uint(id), &request)
 		if err != nil {
 			errResp := ErrorResponse{
 				Error: err.Error(),
