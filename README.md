@@ -1,6 +1,10 @@
 order
 --
-Due to connecitivity issue, I couldn't connect the containerized DB from inside the container. Therefore, the API is running locally (support Mac or Linux).
+## Usage
+```
+# please check email and put the google map api key in ./setup.sh
+./setup.sh
+```
 
 ## File structure
 `db/`: contains migration file used by `goose` to handler db migration. It also contains the `Dockerfile` to build db container
