@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sandyleo26/lalamove/order"
+	"github.com/sandyleo26/order_api/order"
 	"github.com/stretchr/testify/mock"
 )
 

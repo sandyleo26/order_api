@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/sandyleo26/lalamove/database"
+	"github.com/sandyleo26/order_api/database"
 )
 
 type DBAdaptor interface {
