@@ -70,11 +70,11 @@ func (_m *MockUseCase) GetOrder(options *GetOptions) ([]*GetResponse, int, error
 }
 
 // TakeOrder provides a mock function with given fields: id, r
-func (_m *MockUseCase) TakeOrder(id int, r *TakeRequest) (*TakeResponse, int, error) {
+func (_m *MockUseCase) TakeOrder(id uint, r *TakeRequest) (*TakeResponse, int, error) {
 	ret := _m.Called(id, r)
 
 	var r0 *TakeResponse
-	if rf, ok := ret.Get(0).(func(int, *TakeRequest) *TakeResponse); ok {
+	if rf, ok := ret.Get(0).(func(uint, *TakeRequest) *TakeResponse); ok {
 		r0 = rf(id, r)
 	} else {
 		if ret.Get(0) != nil {
@@ -83,14 +83,14 @@ func (_m *MockUseCase) TakeOrder(id int, r *TakeRequest) (*TakeResponse, int, er
 	}
 
 	var r1 int
-	if rf, ok := ret.Get(1).(func(int, *TakeRequest) int); ok {
+	if rf, ok := ret.Get(1).(func(uint, *TakeRequest) int); ok {
 		r1 = rf(id, r)
 	} else {
 		r1 = ret.Get(1).(int)
 	}
 
 	var r2 error
-	if rf, ok := ret.Get(2).(func(int, *TakeRequest) error); ok {
+	if rf, ok := ret.Get(2).(func(uint, *TakeRequest) error); ok {
 		r2 = rf(id, r)
 	} else {
 		r2 = ret.Error(2)

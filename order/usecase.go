@@ -13,13 +13,13 @@ type UseCase interface {
 }
 
 type RealUseCase struct {
-	OutputAdaptor
+	DBAdaptor
 	DistanceService
 }
 
 func NewRealUseCase() UseCase {
 	return &RealUseCase{
-		OutputAdaptor:   &PgAdaptor{},
+		DBAdaptor:       &PgAdaptor{},
 		DistanceService: &GoogleDistanceService{},
 	}
 }
@@ -44,7 +44,7 @@ func (uc *RealUseCase) CreateOrder(r *CreateRequest) (*CreateResponse, int, erro
 		Distance:  d,
 		Status:    StatusUNASSIGN,
 	}
-	_, err = uc.OutputAdaptor.Create(newOrder)
+	newOrder, err = uc.DBAdaptor.Create(newOrder)
 	if err != nil {
 		log.Printf("Create order failed with error=%s\n", err.Error())
 		return nil, http.StatusInternalServerError, fmt.Errorf("ERROR_DESCRIPTION")
@@ -63,7 +63,7 @@ func (uc *RealUseCase) TakeOrder(id uint, r *TakeRequest) (*TakeResponse, int, e
 		return nil, http.StatusBadRequest, fmt.Errorf("bad request")
 	}
 
-	_, err := uc.OutputAdaptor.Update(id, StatusSUCCESS)
+	_, err := uc.DBAdaptor.Update(id, StatusSUCCESS)
 	if err != nil {
 
 	}
@@ -77,7 +77,7 @@ func (uc *RealUseCase) GetOrder(options *GetOptions) ([]*GetResponse, int, error
 		return nil, http.StatusBadRequest, err
 	}
 
-	orders, err := uc.OutputAdaptor.Get(options)
+	orders, err := uc.DBAdaptor.Get(options)
 	if err != nil {
 		return nil, http.StatusInternalServerError, err
 	}

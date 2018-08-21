@@ -6,7 +6,7 @@ import (
 	"github.com/sandyleo26/lalamove/database"
 )
 
-type OutputAdaptor interface {
+type DBAdaptor interface {
 	Create(*Order) (*Order, error)
 	Update(id uint, status Status) (*Order, error)
 	Get(*GetOptions) ([]*Order, error)
